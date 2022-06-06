@@ -25,13 +25,15 @@ RUN apk --update-cache add \
         /usr/local/aws-cli/v2/*/dist/aws_completer \
         /usr/local/aws-cli/v2/*/dist/awscli/data/ac.index \
         /usr/local/aws-cli/v2/*/dist/awscli/examples \
-    && apk --no-cache del \
-        binutils \
-        curl \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
     && rm -rf /var/cache/apk/* \
     && docker --version \
     && aws --version
+
+RUN apk --no-cache add curl jq
+
+RUN curl "https://s3.us-west-2.amazonaws.com/lightsailctl/latest/linux-amd64/lightsailctl" -o "/usr/local/bin/lightsailctl" \
+    && chmod +x /usr/local/bin/lightsailctl
 
 CMD /bin/bash
